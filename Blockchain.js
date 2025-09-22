@@ -7,13 +7,13 @@ const { utf8ToBytes } = require('ethereum-cryptography/utils');
 
 class Block {
     constructor(data) {
-        this.data = data; // упрощённо строка
+        this.data = data;
         this.previousHash = null;
     }
 
     toHash() {
         const hashBytes = utf8ToBytes(this.data + this.previousHash);
-        return sha256(hashBytes); // байтовый массив
+        return sha256(hashBytes);
     }
 }
 
