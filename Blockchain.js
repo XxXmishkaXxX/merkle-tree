@@ -2,38 +2,44 @@
  * Seminar 2.1 Blockchain primitive
  */
 
-const SHA256 = require('ethereum-cryptography/sha256').sha256;
-const utf8ToBytes = require('ethereum-cryptography/utils').utf8ToBytes;
-
+const { sha256 } = require('ethereum-cryptography/sha256');
+const { utf8ToBytes } = require('ethereum-cryptography/utils');
 
 class Block {
-    constructor(data){
-        this.data = data;      // Here we simplify data, let it be just a simple string
+    constructor(data) {
+        this.data = data; // упрощённо строка
         this.previousHash = null;
     }
 
-    toHash(){
+    toHash() {
         const hashBytes = utf8ToBytes(this.data + this.previousHash);
-        return SHA256(hashBytes);        // a hash as byte array
+        return sha256(hashBytes); // байтовый массив
     }
 }
 
-
 class Blockchain {
     constructor() {
-        
-        this.chain = [
-             /* TODO 1: Create the genesis block here */ 
-            ];
+        const genesis = new Block("Genesis Block");
+        genesis.previousHash = "0";
+        this.chain = [genesis];
     }
 
-    addBlock(block){
-        // TODO 2 Compute block.previousHash = previousBlock.toHash()
-        this.chain.push(block)
+    addBlock(block) {
+        const previousBlock = this.chain[this.chain.length - 1];
+        block.previousHash = Buffer.from(previousBlock.toHash()).toString("hex");
+        this.chain.push(block);
     }
 
-    isValid(){
-        // TODO 3 Check every block previous hash
+    isValid() {
+        for (let i = 1; i < this.chain.length; i++) {
+            const current = this.chain[i];
+            const prev = this.chain[i - 1];
+
+            const prevHash = Buffer.from(prev.toHash()).toString("hex");
+            if (current.previousHash !== prevHash) {
+                return false;
+            }
+        }
         return true;
     }
 }

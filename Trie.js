@@ -1,8 +1,3 @@
-/**
- * Seminar 2.5 Simple Trie
- */
-
-
 class TrieNode {
     constructor(key) {
         this.key = key;
@@ -11,25 +6,45 @@ class TrieNode {
     }
 }
 
-
 class Trie {
     constructor() {
         this.root = new TrieNode(null);
     }
 
     insert(word) {
-        // TODO Insert word symbol by symbol
-
+        let current = this.root;
+        for (const char of word) {
+            if (!current.children[char]) {
+                current.children[char] = new TrieNode(char);
+            }
+            current = current.children[char];
+        }
+        current.isWord = true;
     }
 
-    hasNode(word){
-        // TODO Check is word in Trie
-        return false;
+    hasNode(word) {
+        let current = this.root;
+        for (const char of word) {
+            if (!current.children[char]) {
+                return false;
+            }
+            current = current.children[char];
+        }
+        return current.isWord;
     }
 
-    getAllNodes(){
-        // TODO returns all nodes as array
-        return [];
+    getAllNodes() {
+        const result = [];
+        function dfs(node, path) {
+            if (node.isWord) {
+                result.push(path);
+            }
+            for (const childKey in node.children) {
+                dfs(node.children[childKey], path + childKey);
+            }
+        }
+        dfs(this.root, "");
+        return result;
     }
 }
 

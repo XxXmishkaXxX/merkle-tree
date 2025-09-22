@@ -2,6 +2,10 @@
  * Seminar 2.3 Binary search tree
  */
 
+/**
+ * Seminar 2.3 Binary search tree
+ */
+
 class Node {
     constructor(data) {
         this.data = data;
@@ -10,21 +14,47 @@ class Node {
     }
 }
 
-
 class Tree {
     constructor() {
         this.root = null;
     }
 
-    addNode(node){
-        // TODO 1 Implement 
+    addNode(node) {
+        if (this.root === null) {
+            this.root = node;
+            return;
+        }
+
+        let current = this.root;
+        while (true) {
+            if (node.data < current.data) {
+                if (current.left === null) {
+                    current.left = node;
+                    break;
+                }
+                current = current.left;
+            } else if (node.data > current.data) {
+                if (current.right === null) {
+                    current.right = node;
+                    break;
+                }
+                current = current.right;
+            } else {
+                break;
+            }
+        }
     }
 
-    hasNode(data){
-        // TODO 2 Implement 
+    hasNode(data) {
+        let current = this.root;
+        while (current !== null) {
+            if (data === current.data) {
+                return true;
+            }
+            current = data < current.data ? current.left : current.right;
+        }
+        return false;
     }
 }
-
-
 
 module.exports = { Node, Tree }
